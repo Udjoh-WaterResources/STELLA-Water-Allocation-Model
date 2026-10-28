@@ -1,0 +1,593 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xmile version="1.0" xmlns="http://docs.oasis-open.org/xmile/ns/XMILE/v1.0" xmlns:isee="http://iseesystems.com/XMILE">
+	<header>
+		<smile version="1.0" namespace="std, isee"/>
+		<name>Integrated Water Resource Management in the Helge Å Basin</name>
+		<uuid>912fe967-c146-4f82-9dca-9c52656548e8</uuid>
+		<vendor>isee systems, inc.</vendor>
+		<product version="4.4.1" isee:build_number="4072" isee:saved_by_v1="true" lang="en">Stella Architect</product>
+	</header>
+	<ai_information>
+		<status verified="true" mixed="false" trusted="true" tampered="false" uses="false" analyzed="false" log_truncated="false" timestamp="1793057626" algorithm="ed25519" keyurl="https://iseesystems.com/keys/stella01.txt" want_var_info="true" want_var_status="false" want_log="false" sampling="1" signature="pImCJTEvhaX/UEnWgcu1+Os5c4N6r1eC1mzGwYx9S6hex1yuGBCqvtLYH0rgcDg1hsqMdsrQViiFL73K4IaIDg=="/>
+	</ai_information>
+	<sim_specs isee:sim_duration="1.5" isee:run_prefix="Run" isee:simulation_delay="0.0306122" isee:restore_on_start="false" method="Euler" time_units="Years" isee:instantaneous_flows="false" isee:ignore_module_errors="false" isee:strict_units="true" isee:loop_scores="true" isee:loop_exhaustive_allowed="1000">
+		<start>2001</start>
+		<stop>2050</stop>
+		<dt>0.01</dt>
+	</sim_specs>
+	<isee:prefs saved_runs="5" keep="false" show_module_prefix="true" live_update_on_drag="true" show_restore_buttons="false" layer="model" isee:design="Deluxe Prev-Next Blue Green Pastel" isee:design_custom="false" interface_scale_ui="true" interface_max_page_width="10000" interface_max_page_height="10000" interface_min_page_width="0" interface_min_page_height="0" rifp="true">
+		<isee:tag_styles>
+			<isee:tag_style tag="Interface"/>
+			<isee:tag_style tag="Output"/>
+			<isee:tag_style tag="Parameter"/>
+			<isee:tag_style tag="Policy"/>
+		</isee:tag_styles>
+	</isee:prefs>
+	<isee:multiplayer_settings include_chat="true" allow_observers="false" advance_time_increment="1" max_advance_time_in_ms="0" model_stops_when_players_drop="false" observer_start_page="home_page" enabled="false"/>
+	<isee:time_formats default_format="TimeLabel1">
+		<isee:time_format name="Builtin" type="adaptive"/>
+		<isee:time_format name="TimeLabel1" scale_by="1" type="number"/>
+	</isee:time_formats>
+	<isee:number_format_extenders/>
+	<default_format/>
+	<model_units>
+		<unit name="Dimensionless">
+			<eqn>1</eqn>
+			<alias>dmnl</alias>
+			<alias>unitless</alias>
+			<alias>fraction</alias>
+		</unit>
+		<unit name="Cubic Meters">
+			<eqn>Meters^3</eqn>
+			<alias>cubic meter</alias>
+			<alias>cu m</alias>
+		</unit>
+		<unit name="Meters">
+			<eqn/>
+			<alias>m</alias>
+			<alias>meter</alias>
+		</unit>
+		<unit name="Millimeters">
+			<eqn/>
+			<alias>mm</alias>
+			<alias>millimeter</alias>
+		</unit>
+		<unit name="Square Meters">
+			<eqn>Meters^2</eqn>
+			<alias>sq m</alias>
+			<alias>square meter</alias>
+		</unit>
+		<unit name="Euros">
+			<eqn/>
+			<alias>€</alias>
+			<alias>EUR</alias>
+			<alias>euro</alias>
+		</unit>
+		<unit name="Swedish Kroners">
+			<eqn/>
+			<alias>SEK</alias>
+			<alias>swedish kroner</alias>
+		</unit>
+		<unit name="Years">
+			<eqn/>
+			<alias>yr</alias>
+			<alias>year</alias>
+		</unit>
+	</model_units>
+	<model>
+		<variables>
+			<stock name="Lake Volume">
+				<eqn>25.5e6</eqn>
+				<inflow>Precipitation_Direct</inflow>
+				<inflow>Catchment_Runoff</inflow>
+				<outflow>Outflow_Discharge</outflow>
+				<outflow>City_Pipeline</outflow>
+				<outflow>Hydropower_Flow</outflow>
+				<outflow>Flood_Pumping</outflow>
+				<outflow>Irrigation_Flow</outflow>
+				<non_negative/>
+				<units>cubic meter</units>
+			</stock>
+			<flow name="Precipitation Direct">
+				<eqn>(Precipitation/1000)*Lake_Area</eqn>
+				<non_negative/>
+				<units>Cubic Meters/Years</units>
+			</flow>
+			<flow name="Catchment Runoff">
+				<eqn>(Effective_Precipitation/1000)*Catchment_Area*RunOff_Coefficient</eqn>
+				<non_negative/>
+				<units>Cubic Meters/Years</units>
+			</flow>
+			<flow name="Outflow Discharge">
+				<eqn>Lake_Volume/K_M</eqn>
+				<non_negative/>
+				<units>Cubic Meters/Years</units>
+			</flow>
+			<flow name="City Pipeline">
+				<eqn> 20536000</eqn>
+				<non_negative/>
+				<units>Cubic Meters/Years</units>
+			</flow>
+			<aux name="Lake depth">
+				<eqn>Lake_Volume</eqn>
+				<gf>
+					<yscale min="0" max="2"/>
+					<xpts>0,0.0085,0.017,0.0255,0.051,0.102,0.1275</xpts>
+					<ypts>0,0.5,1,1.5,2,2.5,3</ypts>
+				</gf>
+				<units>Cubic Meters</units>
+			</aux>
+			<flow name="Hydropower Flow">
+				<eqn>PowerPlant_Required_flow</eqn>
+				<non_negative/>
+				<units>Cubic Meters/Years</units>
+			</flow>
+			<aux name="Hydropower Switch">
+				<eqn>1</eqn>
+				<units/>
+			</aux>
+			<aux name="Hydropower Demand">
+				<eqn>3*31536000</eqn>
+				<units>Cubic Meters/Years</units>
+			</aux>
+			<aux name="Temperature">
+				<eqn>TIME</eqn>
+				<gf>
+					<yscale min="0" max="2"/>
+					<xpts>2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025,2026,2027,2028,2029,2030,2031,2032,2033,2034,2035,2036,2037,2038,2039,2040,2041,2042,2043,2044,2045,2046,2047,2048,2049,2050</xpts>
+					<ypts>6.914583333,8.0125,7.425,7.141666667,7.441666667,8.025,8.216666667,8.183333333,7.458333333,5.85,7.916666667,7,7.408333333,8.85,8.166666667,8,7.866666667,8.733333333,8.75,9.166666667,6.91,8.01,7.43,7.14,7.44,8.03,8.22,8.18,7.46,5.85,7.61,8.81,8.17,7.86,8.19,8.83,9.04,9,8.2,6.44,8.71,7.7,8.15,9.74,8.98,8.8,8.65,9.61,9.63,10.08</ypts>
+				</gf>
+				<units>Celsius</units>
+			</aux>
+			<aux name="Precipitation">
+				<eqn>TIME</eqn>
+				<gf>
+					<yscale min="0" max="100"/>
+					<xpts>2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025,2026,2027,2028,2029,2030,2031,2032,2033,2034,2035,2036,2037,2038,2039,2040,2041,2042,2043,2044,2045,2046,2047,2048,2049,2050</xpts>
+					<ypts>633.1,858.6,648.8,873.6,681.8,850.3,1037.2,836.3,714.5,793.4,779.7,762.8,575.6,873.9,816.9,658.1,1006.6,529.4,960.1,830,633.1,858.6,648.8,873.6,681.8,850.3,1037.2,836.3,714.5,793.4,569.8,772.7,583.9,786.2,613.6,765.3,933.5,752.7,643.1,714.1,701.7,686.5,518,786.5,735.2,592.3,905.9,476.5,864.1,747</ypts>
+				</gf>
+				<units>Millimeter/year</units>
+			</aux>
+			<aux name="PET">
+				<eqn>300+25*Temperature+0.5*Temperature^3</eqn>
+				<units>Millimeter/year</units>
+			</aux>
+			<aux name="ET">
+				<eqn>Precipitation/SQRT(1+(Precipitation/PET)^2)</eqn>
+				<units>Millimeter/year</units>
+			</aux>
+			<aux name="RunOff Coefficient">
+				<eqn>0.5</eqn>
+				<units>Dimensionless</units>
+			</aux>
+			<aux name="Catchment Area">
+				<eqn>3560.059*10^6</eqn>
+				<units>Square Meters</units>
+			</aux>
+			<aux name="Effective Precipitation">
+				<eqn>Precipitation-ET</eqn>
+				<units>Millimeter/year</units>
+			</aux>
+			<aux name="K M">
+				<eqn>0.0255</eqn>
+				<units>year</units>
+			</aux>
+			<aux name="Lake Area">
+				<eqn>Lake_Volume</eqn>
+				<gf>
+					<yscale min="0" max="2"/>
+					<xpts>0,0.0085,0.017,0.0255,0.051,0.102,0.1275</xpts>
+					<ypts>0,15,16,17,22,28,28</ypts>
+				</gf>
+				<units>square meter</units>
+			</aux>
+			<aux name="PowerPlant Required flow">
+				<eqn>IF (Lake_depth&gt;900) AND (Hydropower_Switch=1) THEN Hydropower_Demand ELSE 0</eqn>
+				<units/>
+			</aux>
+			<flow name="Flood Pumping">
+				<eqn> 20536000</eqn>
+				<non_negative/>
+				<units>Cubic Meters/Years</units>
+			</flow>
+			<flow name="Irrigation Flow">
+				<eqn>IF(Lake_depth&gt;1.1) AND (irrigation_switch=1) THEN Irrigation_Demand ELSE 0</eqn>
+				<non_negative/>
+				<units>Cubic Meters/Years</units>
+			</flow>
+			<aux name="irrigation switch">
+				<eqn>1</eqn>
+			</aux>
+			<aux name="Irrigation Demand">
+				<eqn>42.8e6</eqn>
+			</aux>
+			<aux name="Hydro profits">
+				<eqn>3e6</eqn>
+				<units>Euros</units>
+			</aux>
+			<aux name="Actual Hydro Profits">
+				<eqn>IF (Lake_depth &gt;0.9) AND (Hydropower_Switch =1) THEN Hydro_profits_converstion ELSE 0</eqn>
+				<units>SEK</units>
+			</aux>
+			<aux name="Irrigation profit">
+				<eqn>5e6</eqn>
+				<units>Euros</units>
+			</aux>
+			<aux name="Actual Irrigation Profit">
+				<eqn>IF (Lake_depth&gt;1.1) AND (irrigation_switch=1) THEN irrigation_profits_converter ELSE 0</eqn>
+				<units>SEK</units>
+			</aux>
+			<aux name="Actual Tourism Revenue">
+				<eqn>IF(Lake_depth &gt;1.1) AND (Lake_depth &lt; 1.8) THEN Tourism_base_revenue ELSE (Tourism_base_revenue/2)</eqn>
+				<units>SEK</units>
+			</aux>
+			<aux name="Tourism base revenue">
+				<eqn>10e6</eqn>
+				<units>SEK</units>
+			</aux>
+			<aux name="Hydro profits converstion">
+				<eqn>Hydro_profits*11</eqn>
+				<units>SEK</units>
+			</aux>
+			<aux name="irrigation profits converter">
+				<eqn>Irrigation_profit*11</eqn>
+				<units>SEK</units>
+			</aux>
+			<aux name="Total Revenue">
+				<eqn>Actual_Tourism_Revenue+Actual_Hydro_Profits+Actual_Irrigation_Profit</eqn>
+				<units>SEK/year</units>
+			</aux>
+		</variables>
+		<views>
+			<style color="black" background="white" font_style="normal" font_weight="normal" text_decoration="none" text_align="center" vertical_text_align="center" font_color="black" font_family="Arial" font_size="10pt" padding="2" border_color="black" border_width="thin" border_style="none">
+				<text_box color="black" background="white" text_align="left" vertical_text_align="top" font_size="12pt"/>
+				<isee:loop_indicator color="black" background="white" vertical_text_align="top" font_size="12pt"/>
+				<numeric_display color="white" background="white" font_size="12pt" border_width="thin" border_style="solid" isee:transparent="false" isee:show_divider="true" isee:show_bounding_box="true" label_side="left"/>
+				<graph color="black" background="white" font_size="12pt" axis_color="#666666" grid_color="#C8C8C8" isee:graph_area_color="white" legend_position="bottom" isee:transparent="false" isee:hide_border="false" axis_title_font_style="normal" axis_title_font_weight="normal" axis_title_text_decoration="none" axis_title_text_align="center" axis_title_vertical_text_align="center" axis_title_font_color="black" axis_title_font_family="Arial" axis_title_font_size="12pt" axis_title_text_padding="2" axis_title_text_border_color="black" axis_title_text_border_width="thin" axis_title_text_border_style="none" axis_label_font_style="normal" axis_label_font_weight="normal" axis_label_text_decoration="none" axis_label_text_align="center" axis_label_vertical_text_align="center" axis_label_font_color="black" axis_label_font_family="Arial" axis_label_font_size="9pt" axis_label_text_padding="2" axis_label_text_border_color="black" axis_label_text_border_width="thin" axis_label_text_border_style="none">
+					<isee:series_styles>
+						<isee:series_style color="blue" thickness="1"/>
+						<isee:series_style color="red" thickness="1" pen_style="dot_dashed"/>
+						<isee:series_style color="fuchsia" thickness="1" pen_style="dotted"/>
+						<isee:series_style color="#008F44" thickness="1" pen_style="dashed"/>
+						<isee:series_style color="#FF7F00" thickness="1"/>
+						<isee:series_style color="#7F00FF" thickness="1" pen_style="dot_dashed"/>
+						<isee:series_style color="#0CA0FF" thickness="1" pen_style="dotted"/>
+						<isee:series_style color="lime" thickness="1" pen_style="dashed"/>
+						<isee:series_style color="#FF007F" thickness="1"/>
+						<isee:series_style color="aqua" thickness="1" pen_style="dot_dashed"/>
+						<isee:series_style color="#F586FF" thickness="1" pen_style="dotted"/>
+						<isee:series_style color="black" thickness="1" pen_style="dashed"/>
+						<isee:series_style color="#C8C8C8" thickness="1"/>
+					</isee:series_styles>
+				</graph>
+				<table color="black" background="#E0E0E0" text_align="right" font_size="12pt" orientation="vertical" wrap_text="false" isee:auto_fit="true" isee:use_alternate_row_colors="false" isee:unlimited_table_length="false" blank_column_width="80" column_width="160" interval="1" report_balances="beginning" report_flows="instantaneous" header_font_style="normal" header_font_weight="normal" header_text_decoration="none" header_text_align="center" header_vertical_text_align="center" header_font_color="black" header_font_family="Arial" header_font_size="12pt" header_text_padding="2" header_text_border_color="black" header_text_border_width="thin" header_text_border_style="none"/>
+				<button color="black" background="#E0E0E0" font_size="12pt" border_width="thin" border_style="solid" transparent="false" corner_radius="0" isee:flat="false" icon_side="top" isee:highlight_on_hover="false" isee:highlight_color="#959595"/>
+				<isee:annotation color="black" background="#E0E0E0" font_size="12pt" border_width="thin" border_style="solid" transparent="false" corner_radius="0" isee:flat="false" icon_side="top" isee:highlight_on_hover="false" isee:highlight_color="#959595" popup_corner_radius="0" popup_background_color="#FFFECF"/>
+				<slider color="#0075FF" background="#E0E0E0" font_size="12pt" num_ticks="3" label_side="top" wrap_title="true" vertical="false" isee:fancy_appearance="false" isee:show_hover_tip="when_deciding" input_expands="true" input_width="100"/>
+				<isee:stacked_container color="black" background="white" text_align="left" vertical_text_align="top" font_size="12pt" padding="6 8" border_color="#999999" border_width="thin" border_style="solid" item_spacing="0" corner_radius="4" selected_item_color="black" selected_item_background="white" item_background="#DDDDDD" transparent_bg="false"/>
+				<isee:dual_slider color="#66CC66" background="silver" font_size="12pt" num_ticks="3" label_side="top" wrap_title="true" isee:show_hover_tip="when_deciding" input_expands="true" input_width="100"/>
+				<isee:sim_speed_slider color="black" background="white"/>
+				<isee:time_slider color="#E95F74" background="silver"/>
+				<isee:pie_input color="black" background="white" font_size="12pt" legend_position="bottom" isee:transparent="false"/>
+				<knob color="#66CC66" background="#E0E0E0" font_size="12pt" label_side="bottom" wrap_title="true"/>
+				<numeric_input color="black" background="#E0E0E0" font_size="12pt" label_side="left" wrap_title="true" input_expands="false" input_width="100"/>
+				<isee:dropdown_input color="black" background="#E0E0E0" font_size="12pt" label_side="left" wrap_title="true" input_expands="false" input_width="100"/>
+				<switch color="black" background="#E0E0E0" font_size="12pt" label_side="top" wrap_title="true" isee:appearance="switch" isee:on_color="green"/>
+				<options color="black" background="white" appearance="radio-buttons" arrangement="vertical"/>
+				<graphical_input color="black" background="#E0E0E0" font_size="12pt" isee:show_hover_tip="true"/>
+				<group_input color="black" background="#E0E0E0" font_size="12pt"/>
+				<lamp color="black" background="white" font_size="9pt"/>
+				<gauge color="black" background="white" font_size="9pt" needle_color="#F09F72" bar_color="#EEEEEE" bar_progress_color="black" appearance="radial" num_major_ticks="11" num_minor_ticks="1" show_numeric_value="true"/>
+				<isee:spatial_map color="black" background="white" font_size="12pt"/>
+				<isee:animation_object color="black" background="white" font_size="12pt"/>
+				<isee:navigation_widget color="black" background="white" text_align="left" vertical_text_align="top" font_size="12pt" padding="6 8" border_color="#999999" border_width="thin" border_style="solid" item_spacing="6" appearance="tabs" corner_radius="4" selected_item_color="black" selected_item_background="white" item_background="#DDDDDD" transparent_bg="false"/>
+				<isee:shape color="black" background="white" text_align="left" vertical_text_align="top" font_size="12pt" border_width="thin" border_style="solid" opacity="1" transparent_background="true" corner_radius="1"/>
+				<isee:selector color="black" background="white" text_align="left" vertical_text_align="top" font_size="12pt"/>
+				<isee:iframe color="black" background="white" text_align="left" vertical_text_align="top" font_size="12pt" border_width="thin" border_style="solid"/>
+				<isee:financial_table color="black" background="#E0E0E0" text_align="right" font_size="12pt" hide_border="false" auto_fit="true" first_column_width="250" other_column_width="100" header_font_style="normal" header_font_weight="bold" header_text_decoration="none" header_text_align="center" header_vertical_text_align="center" header_font_color="black" header_font_family="Arial" header_font_size="14pt" header_text_padding="2" header_text_border_color="black" header_text_border_width="thin" header_text_border_style="none"/>
+			</style>
+			<view isee:show_pages="false" background="white" page_width="1123" page_height="793" isee:page_cols="2" isee:scroll_y="23.75" zoom="80" isee:popup_graphs_are_comparative="true" isee:enable_non_negative_highlights="false" type="stock_flow">
+				<style color="black" background="white" font_style="normal" font_weight="normal" text_decoration="none" text_align="center" vertical_text_align="center" font_color="black" font_family="Arial" font_size="10pt" padding="2" border_color="black" border_width="thin" border_style="none">
+					<stock color="blue" background="white" font_color="blue" font_size="9pt" label_side="top">
+						<shape type="rectangle" width="45" height="35"/>
+					</stock>
+					<flow color="blue" background="white" font_color="blue" font_size="9pt" label_side="bottom">
+						<shape type="circle" radius="18"/>
+					</flow>
+					<isee:placeholder color="#228B22" background="white" font_color="#228B22" font_size="9pt" label_side="bottom"/>
+					<module color="blue" background="white" font_color="blue" font_size="9pt" label_side="top">
+						<shape type="rectangle" width="55" height="45"/>
+					</module>
+					<aux color="blue" background="white" font_color="blue" font_size="9pt" label_side="bottom">
+						<shape type="circle" radius="18"/>
+					</aux>
+					<group color="red" background="white" font_color="red" font_size="9pt"/>
+					<connector color="#FF007F" background="white" font_color="#FF007F" font_size="9pt" isee:thickness="1"/>
+					<text_box color="black" background="white" text_align="left" vertical_text_align="top" font_size="12pt"/>
+					<isee:loop_indicator color="black" background="white" vertical_text_align="top" font_size="12pt"/>
+					<numeric_display color="white" background="white" font_size="12pt" border_width="thin" border_style="solid" isee:transparent="false" isee:show_divider="true" isee:show_bounding_box="true" label_side="left"/>
+					<graph color="black" background="white" font_size="12pt" axis_color="#666666" grid_color="#C8C8C8" isee:graph_area_color="white" legend_position="bottom" isee:transparent="false" isee:hide_border="false" axis_title_font_style="normal" axis_title_font_weight="normal" axis_title_text_decoration="none" axis_title_text_align="center" axis_title_vertical_text_align="center" axis_title_font_color="black" axis_title_font_family="Arial" axis_title_font_size="12pt" axis_title_text_padding="2" axis_title_text_border_color="black" axis_title_text_border_width="thin" axis_title_text_border_style="none" axis_label_font_style="normal" axis_label_font_weight="normal" axis_label_text_decoration="none" axis_label_text_align="center" axis_label_vertical_text_align="center" axis_label_font_color="black" axis_label_font_family="Arial" axis_label_font_size="9pt" axis_label_text_padding="2" axis_label_text_border_color="black" axis_label_text_border_width="thin" axis_label_text_border_style="none">
+						<isee:series_styles>
+							<isee:series_style color="blue" thickness="1"/>
+							<isee:series_style color="red" thickness="1" pen_style="dot_dashed"/>
+							<isee:series_style color="fuchsia" thickness="1" pen_style="dotted"/>
+							<isee:series_style color="#008F44" thickness="1" pen_style="dashed"/>
+							<isee:series_style color="#FF7F00" thickness="1"/>
+							<isee:series_style color="#7F00FF" thickness="1" pen_style="dot_dashed"/>
+							<isee:series_style color="#0CA0FF" thickness="1" pen_style="dotted"/>
+							<isee:series_style color="lime" thickness="1" pen_style="dashed"/>
+							<isee:series_style color="#FF007F" thickness="1"/>
+							<isee:series_style color="aqua" thickness="1" pen_style="dot_dashed"/>
+							<isee:series_style color="#F586FF" thickness="1" pen_style="dotted"/>
+							<isee:series_style color="black" thickness="1" pen_style="dashed"/>
+							<isee:series_style color="#C8C8C8" thickness="1"/>
+						</isee:series_styles>
+					</graph>
+					<table color="black" background="#E0E0E0" text_align="right" font_size="12pt" orientation="vertical" wrap_text="false" isee:auto_fit="true" isee:use_alternate_row_colors="false" isee:unlimited_table_length="false" blank_column_width="80" column_width="160" interval="1" report_balances="beginning" report_flows="instantaneous" header_font_style="normal" header_font_weight="normal" header_text_decoration="none" header_text_align="center" header_vertical_text_align="center" header_font_color="black" header_font_family="Arial" header_font_size="12pt" header_text_padding="2" header_text_border_color="black" header_text_border_width="thin" header_text_border_style="none"/>
+				</style>
+				<stock x="490.833" y="299.833" width="185" height="228.333" name="Lake Volume"/>
+				<flow x="396.75" y="324" name="Precipitation Direct">
+					<pts>
+						<pt x="302.667" y="324"/>
+						<pt x="490.833" y="324"/>
+					</pts>
+				</flow>
+				<flow x="395.75" y="418" name="Catchment Runoff">
+					<pts>
+						<pt x="300.667" y="418"/>
+						<pt x="490.833" y="418"/>
+					</pts>
+				</flow>
+				<flow x="783.25" y="471.333" name="Outflow Discharge">
+					<pts>
+						<pt x="675.833" y="471.333"/>
+						<pt x="914.667" y="471.333"/>
+					</pts>
+				</flow>
+				<connector uid="1" angle="338.477">
+					<from>Lake_Volume</from>
+					<to>Outflow_Discharge</to>
+				</connector>
+				<flow x="766.917" y="306.667" name="City Pipeline">
+					<pts>
+						<pt x="675.833" y="306.667"/>
+						<pt x="882" y="306.667"/>
+					</pts>
+				</flow>
+				<aux x="572" y="600" width="33.3333" height="33.3333" name="Lake depth"/>
+				<flow x="772.917" y="515" name="Hydropower Flow">
+					<pts>
+						<pt x="675.833" y="515"/>
+						<pt x="894" y="515"/>
+					</pts>
+				</flow>
+				<aux x="718.333" y="622.333" name="Hydropower Switch"/>
+				<aux x="838" y="625.667" name="Hydropower Demand"/>
+				<connector uid="4" angle="28.2128">
+					<from>Lake_depth</from>
+					<to>PowerPlant_Required_flow</to>
+				</connector>
+				<connector uid="5" angle="61.5326">
+					<from>Hydropower_Switch</from>
+					<to>PowerPlant_Required_flow</to>
+				</connector>
+				<connector uid="6" angle="106.176">
+					<from>Hydropower_Demand</from>
+					<to>PowerPlant_Required_flow</to>
+				</connector>
+				<aux x="69.6667" y="97.6667" width="36" height="36" name="Temperature"/>
+				<aux x="160.333" y="123.667" width="36" height="36" name="Precipitation"/>
+				<aux x="62.6667" y="183.167" width="36.6667" height="36.6667" name="PET"/>
+				<connector uid="7" angle="265.559">
+					<from>Temperature</from>
+					<to>PET</to>
+				</connector>
+				<aux x="111" y="259.167" width="40.6667" height="40.6667" name="ET"/>
+				<connector uid="8" angle="251.171">
+					<from>Precipitation</from>
+					<to>ET</to>
+				</connector>
+				<connector uid="9" angle="302.834">
+					<from>PET</from>
+					<to>ET</to>
+				</connector>
+				<aux x="134.333" y="413.667" width="26" height="26" name="RunOff Coefficient"/>
+				<aux x="151.667" y="494.333" width="29.3333" height="29.3333" name="Catchment Area"/>
+				<aux x="186.333" y="315.667" width="28.6667" height="28.6667" name="Effective Precipitation"/>
+				<connector uid="10" angle="336.37">
+					<from>Precipitation</from>
+					<to>Effective_Precipitation</to>
+				</connector>
+				<connector uid="11" angle="323.932">
+					<from>ET</from>
+					<to>Effective_Precipitation</to>
+				</connector>
+				<connector uid="12" angle="6.66078">
+					<from>Effective_Precipitation</from>
+					<to>Catchment_Runoff</to>
+				</connector>
+				<connector uid="13" angle="18.4853">
+					<from>RunOff_Coefficient</from>
+					<to>Catchment_Runoff</to>
+				</connector>
+				<connector uid="14" angle="349.632">
+					<from>Catchment_Area</from>
+					<to>Catchment_Runoff</to>
+				</connector>
+				<connector uid="15" angle="355.769">
+					<from>Precipitation</from>
+					<to>Precipitation_Direct</to>
+				</connector>
+				<aux x="712.833" y="436" name="K M"/>
+				<connector uid="18" angle="333.354">
+					<from>K_M</from>
+					<to>Outflow_Discharge</to>
+				</connector>
+				<aux x="456.667" y="594.333" name="Lake Area"/>
+				<connector uid="22" angle="185.929">
+					<from>
+						<alias uid="21"/>
+					</from>
+					<to>Precipitation_Direct</to>
+				</connector>
+				<connector uid="23" angle="236.498">
+					<from>Lake_Volume</from>
+					<to>Lake_Area</to>
+				</connector>
+				<connector uid="24" angle="280.151">
+					<from>Lake_Volume</from>
+					<to>Lake_depth</to>
+				</connector>
+				<aux x="772.917" y="576.333" name="PowerPlant Required flow"/>
+				<connector uid="25" angle="90">
+					<from>PowerPlant_Required_flow</from>
+					<to>Hydropower_Flow</to>
+				</connector>
+				<flow x="773.25" y="414" name="Flood Pumping">
+					<pts>
+						<pt x="675.833" y="414"/>
+						<pt x="894.667" y="414"/>
+					</pts>
+				</flow>
+				<stacked_container uid="26" x="575" y="65.1667" width="286.667" height="194">
+					<graph width="286.667" height="194" type="time_series" show_grid="false" isee:tick_type="none" include_units_in_legend="false" plot_numbers="false" isee:label_pie_slices="false" isee:show_pie_borders="true" num_x_grid_lines="0" num_y_grid_lines="0" num_x_labels="5" num_y_labels="3" isee:fill_intensity="0.1" to="2020" from="2001" isee:allow_zero_axis="true" left_axis_multi_scale="false" left_axis_auto_scale="true" left_include_units="true" right_axis_multi_scale="false" right_axis_auto_scale="true" right_include_units="true">
+						<plot color="blue" isee:keep_zero_visible="true" pen_width="1" index="0" show_y_axis="true">
+							<entity name="Actual_Tourism_Revenue"/>
+						</plot>
+					</graph>
+				</stacked_container>
+				<flow x="782.25" y="353.333" name="Irrigation Flow">
+					<pts>
+						<pt x="675.833" y="353.333"/>
+						<pt x="912.667" y="353.333"/>
+					</pts>
+				</flow>
+				<aux x="974" y="340.333" name="irrigation switch"/>
+				<aux x="1019.33" y="306.667" name="Irrigation Demand"/>
+				<connector uid="27" angle="168.77">
+					<from>
+						<alias uid="28"/>
+					</from>
+					<to>Irrigation_Flow</to>
+				</connector>
+				<connector uid="29" angle="168.809">
+					<from>irrigation_switch</from>
+					<to>Irrigation_Flow</to>
+				</connector>
+				<connector uid="30" angle="175.265">
+					<from>Irrigation_Demand</from>
+					<to>Irrigation_Flow</to>
+				</connector>
+				<aux x="917.167" y="664.833" name="Hydro profits"/>
+				<aux x="1074.67" y="599.333" name="Actual Hydro Profits"/>
+				<connector uid="32" angle="326.837">
+					<from>
+						<alias uid="33"/>
+					</from>
+					<to>Actual_Hydro_Profits</to>
+				</connector>
+				<aux x="1130.5" y="306.667" name="Irrigation profit"/>
+				<aux x="1072.33" y="414" name="Actual Irrigation Profit"/>
+				<connector uid="36" angle="346.976">
+					<from>
+						<alias uid="28"/>
+					</from>
+					<to>Actual_Irrigation_Profit</to>
+				</connector>
+				<connector uid="37" angle="340.533">
+					<from>irrigation_switch</from>
+					<to>Actual_Irrigation_Profit</to>
+				</connector>
+				<aux x="1072.33" y="537.167" name="Actual Tourism Revenue"/>
+				<connector uid="39" angle="24.5466">
+					<from>
+						<alias uid="33"/>
+					</from>
+					<to>Actual_Tourism_Revenue</to>
+				</connector>
+				<aux x="966.667" y="497" width="24" height="24" name="Tourism base revenue"/>
+				<connector uid="40" angle="353.835">
+					<from>Tourism_base_revenue</from>
+					<to>Actual_Tourism_Revenue</to>
+				</connector>
+				<aux x="982" y="640.333" name="Hydro profits converstion"/>
+				<connector uid="41" angle="33.3159">
+					<from>Hydro_profits</from>
+					<to>Hydro_profits_converstion</to>
+				</connector>
+				<connector uid="42" angle="42.1972">
+					<from>Hydro_profits_converstion</from>
+					<to>Actual_Hydro_Profits</to>
+				</connector>
+				<aux x="1123.33" y="366.667" name="irrigation profits converter"/>
+				<connector uid="43" angle="287.5">
+					<from>Irrigation_profit</from>
+					<to>irrigation_profits_converter</to>
+				</connector>
+				<connector uid="44" angle="222.865">
+					<from>irrigation_profits_converter</from>
+					<to>Actual_Irrigation_Profit</to>
+				</connector>
+				<aux x="1166.67" y="488" name="Total Revenue"/>
+				<connector uid="45" angle="346.434">
+					<from>Actual_Irrigation_Profit</from>
+					<to>Total_Revenue</to>
+				</connector>
+				<connector uid="46" angle="23.8516">
+					<from>Actual_Tourism_Revenue</from>
+					<to>Total_Revenue</to>
+				</connector>
+				<connector uid="47" angle="31.8309">
+					<from>Actual_Hydro_Profits</from>
+					<to>Total_Revenue</to>
+				</connector>
+				<stacked_container uid="48" x="875" y="67.5" width="299.167" height="189.333">
+					<graph width="299.167" height="189.333" type="time_series" show_grid="false" isee:tick_type="none" include_units_in_legend="false" plot_numbers="false" isee:label_pie_slices="false" isee:show_pie_borders="true" num_x_grid_lines="0" num_y_grid_lines="0" num_x_labels="5" num_y_labels="3" isee:fill_intensity="0.1" isee:allow_zero_axis="true" left_axis_multi_scale="false" left_axis_auto_scale="true" left_include_units="true" right_axis_multi_scale="false" right_axis_auto_scale="true" right_include_units="true">
+						<plot color="blue" isee:keep_zero_visible="true" pen_width="1" index="0" show_y_axis="true">
+							<entity name="Total_Revenue"/>
+						</plot>
+					</graph>
+				</stacked_container>
+				<stacked_container uid="49" x="1192.5" y="70.5" width="298.333" height="188.667">
+					<graph width="298.333" height="188.667" type="time_series" show_grid="false" isee:tick_type="none" include_units_in_legend="false" plot_numbers="false" isee:label_pie_slices="false" isee:show_pie_borders="true" num_x_grid_lines="0" num_y_grid_lines="0" num_x_labels="5" num_y_labels="3" isee:fill_intensity="0.1" isee:allow_zero_axis="true" left_axis_multi_scale="false" left_axis_auto_scale="true" left_include_units="true" right_axis_multi_scale="false" right_axis_auto_scale="true" right_include_units="true">
+						<plot color="blue" isee:keep_zero_visible="true" pen_width="1" index="0" show_y_axis="true">
+							<entity name="Lake_Volume"/>
+						</plot>
+					</graph>
+				</stacked_container>
+				<stacked_container uid="50" x="1200.67" y="311" width="325.667" height="250">
+					<graph width="325.667" height="250" type="time_series" show_grid="false" isee:tick_type="none" include_units_in_legend="false" plot_numbers="false" isee:label_pie_slices="false" isee:show_pie_borders="true" num_x_grid_lines="0" num_y_grid_lines="0" num_x_labels="5" num_y_labels="3" isee:fill_intensity="0.1" isee:allow_zero_axis="true" left_axis_multi_scale="false" left_axis_auto_scale="true" left_include_units="true" right_axis_multi_scale="false" right_axis_auto_scale="true" right_include_units="true">
+						<plot color="blue" isee:keep_zero_visible="true" pen_width="1" index="0" show_y_axis="true">
+							<entity name="Actual_Hydro_Profits"/>
+						</plot>
+						<plot color="red" pen_style="dot_dashed" isee:keep_zero_visible="true" pen_width="1" index="1" show_y_axis="true">
+							<entity name="Actual_Irrigation_Profit"/>
+						</plot>
+						<plot color="fuchsia" pen_style="dotted" isee:keep_zero_visible="true" pen_width="1" index="2" show_y_axis="true">
+							<entity name="Actual_Tourism_Revenue"/>
+						</plot>
+					</graph>
+				</stacked_container>
+				<connector uid="51" angle="41.4237">
+					<from>
+						<alias uid="52"/>
+					</from>
+					<to>Actual_Hydro_Profits</to>
+				</connector>
+				<alias font_style="italic" uid="21" x="507" y="183.167" width="36.6667" height="36.6667">
+					<of>Lake_Area</of>
+				</alias>
+				<alias font_style="italic" uid="28" x="962" y="375.667" width="33.3333" height="33.3333">
+					<of>Lake_depth</of>
+				</alias>
+				<alias font_style="italic" uid="33" x="918" y="552" width="33.3333" height="33.3333">
+					<of>Lake_depth</of>
+				</alias>
+				<alias font_style="italic" uid="52" x="1056.83" y="671.417" width="18" height="18">
+					<of>Hydropower_Switch</of>
+				</alias>
+			</view>
+		</views>
+	</model>
+</xmile>
+
